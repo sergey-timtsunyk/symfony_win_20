@@ -1,0 +1,14 @@
+services:
+  App\Services\ServicesGenerator:
+    calls:
+      - [setLogger, ['@logger']]
+    decoration_priority: 1
+
+  App\Services\ServicesGeneratorNew:
+
+  app.service_generator: '@App\Services\ServicesGenerator'
+
+  App\Services\ServicesGeneratorInterface: '@App\Services\ServicesGeneratorNew'
+
+
+
