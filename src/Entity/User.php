@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,4 +73,42 @@ class User
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Apartment", mappedBy="users")
+     */
+    private $apartments;
+
+    public function __construct()
+    {
+        $this->apartments = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Apartment[]
+     */
+    public function getApartments(): Collection
+    {
+        return $this->apartments;
+    }
+
+    public function addApartment(Apartment $apartment): self
+    {
+        if (!$this->apartments->contains($apartment)) {
+            $this->apartments[] = $apartment;
+            $apartment->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApartment(Apartment $apartment): self
+    {
+        if ($this->apartments->contains($apartment)) {
+            $this->apartments->removeElement($apartment);
+            $apartment->removeUser($this);
+        }
+
+        return $this;
+    }
 }

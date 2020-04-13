@@ -64,25 +64,25 @@ class Street
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Building", mappedBy="street")
      */
-    private $users;
+    private $buildings;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->buildings = new ArrayCollection();
     }
 
     /**
      * @return Collection|Building[]
      */
-    public function getUsers(): Collection
+    public function getBuildings(): Collection
     {
-        return $this->users;
+        return $this->buildings;
     }
 
     public function addUser(Building $user): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+        if (!$this->buildings->contains($user)) {
+            $this->buildings[] = $user;
             $user->setStreet($this);
         }
 
@@ -91,8 +91,8 @@ class Street
 
     public function removeUser(Building $user): self
     {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
+        if ($this->buildings->contains($user)) {
+            $this->buildings->removeElement($user);
             // set the owning side to null (unless already changed)
             if ($user->getStreet() === $this) {
                 $user->setStreet(null);
