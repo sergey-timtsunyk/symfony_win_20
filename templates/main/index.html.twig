@@ -11,5 +11,9 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
     <h3>{{ stringHash }}</h3>
+    <a href="{{ path('city_list') }}">Cities</a><br>
+    <a href="{{ path('street_list') }}">Streets</a><br>
+    <a href="{{ path('building_list') }}">Building</a><br>
+    <a href="{{ path('apartment_list') }}">Apartment</a><br>
 </div>
 {% endblock %}
