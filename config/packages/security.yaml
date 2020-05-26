@@ -10,6 +10,10 @@ security:
             anonymous: lazy
             provider: users_in_memory
 
+            guard:
+                authenticators:
+                    - App\Services\Security\TokenAuthenticator
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

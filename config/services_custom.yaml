@@ -11,4 +11,12 @@ services:
   App\Services\ServicesGeneratorInterface: '@App\Services\ServicesGeneratorNew'
 
 
+  App\Api\ParamConverter\StreetParamConverter:
+    tags:
+      - { name: request.param_converter, converter: get_street }
+    arguments:
+      - '@App\Repository\StreetRepository'
 
+  App\Services\Security\TokenAuthenticator:
+    arguments:
+      - '@App\Repository\UserRepository'
