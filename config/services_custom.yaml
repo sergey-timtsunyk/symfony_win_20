@@ -20,3 +20,7 @@ services:
   App\Services\Security\TokenAuthenticator:
     arguments:
       - '@App\Repository\UserRepository'
+
+  App\Services\Security\PasswordGenerator:
+    arguments:
+      - '%env(APP_SECRET)%'

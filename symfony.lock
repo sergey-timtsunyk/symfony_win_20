@@ -78,6 +78,9 @@
     "egulias/email-validator": {
         "version": "2.1.17"
     },
+    "firebase/php-jwt": {
+        "version": "dev-master"
+    },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
         "recipe": {
