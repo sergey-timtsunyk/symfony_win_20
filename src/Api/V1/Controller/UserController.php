@@ -3,9 +3,11 @@
 namespace App\Api\V1\Controller;
 
 use App\Entity\User;
+use App\Services\JwtAuth\JwtGenerator;
+use App\Services\JwtAuth\JwtGeneratorInterface;
+use App\Services\JwtAuth\JwtPayload;
 use App\Services\Security\PasswordGenerator;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -18,12 +20,19 @@ class UserController extends AbstractFOSRestController
     private $passwordGenerator;
 
     /**
-     * UserController constructor.
-     * @param $passwordGenerator
+     * @var JwtGeneratorInterface
      */
-    public function __construct(PasswordGenerator $passwordGenerator)
+    private $jwtGenerator;
+
+    /**
+     * UserController constructor.
+     * @param PasswordGenerator $passwordGenerator
+     * @param JwtGeneratorInterface $jwtGenerator
+     */
+    public function __construct(PasswordGenerator $passwordGenerator, JwtGeneratorInterface $jwtGenerator)
     {
         $this->passwordGenerator = $passwordGenerator;
+        $this->jwtGenerator = $jwtGenerator;
     }
 
     /**
@@ -40,18 +49,10 @@ class UserController extends AbstractFOSRestController
             throw new AuthenticationException('Credentials not validated');
         }
 
-        $key = "example_key";
-        $payload = array(
-            "iss" => "http://example.org",
-            "aud" => "http://example.com",
-            "iat" => 1356999524,
-            "nbf" => 1357000000
-        );
-
-        $jwt = JWT::encode($payload, $key);
+        $jwt =  $this->jwtGenerator->generateToken(new JwtPayload($user->getId(),  $user->getRoles()));
 
         return $this->handleView($this->view(
-            $requestArray
+            $jwt
         , 200));
     }
 

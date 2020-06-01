@@ -4,8 +4,10 @@ namespace App\Services\JwtAuth;
 
 use Firebase\JWT\JWT;
 
-class JwtGenerator implements JwtGeneratorInterface
+class JwtGenerator implements JwtGeneratorInterface, ExtractPayloadInterface
 {
+
+
     private $key;
 
     /**
@@ -19,12 +21,14 @@ class JwtGenerator implements JwtGeneratorInterface
 
     public function generateToken(JwtPayloadInterface $payload): string
     {
-        return JWT::encode($payload->getParams(), $this->key);
+        return JWT::encode($payload->getParams(), $this->key, 'HS256');
     }
 
-    public function getPayload(string $token): JwtPayloadInterface
+    public function extract(string $token): JwtPayloadInterface
     {
-        $payloadArr = JWT::decode($token, $this->key);
+        $token = trim(substr($token, strlen('Bearer')));
+
+        $payloadArr = JWT::decode($token, $this->key, ['HS256']);
 
         return JwtPayload::getInstance($payloadArr);
     }

@@ -3,6 +3,7 @@
 namespace App\Services\Security;
 
 use App\Repository\UserRepository;
+use App\Services\JwtAuth\ExtractPayloadInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +22,16 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $userRepository;
 
+    private $extractPayload;
+
     /**
      * TokenAuthenticator constructor.
      * @param UserRepository $userRepository
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, ExtractPayloadInterface  $extractPayload)
     {
         $this->userRepository = $userRepository;
+        $this->extractPayload = $extractPayload;
     }
 
     public function start(Request $request, AuthenticationException $authException = null)
@@ -52,7 +56,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        return $this->userRepository->find($credentials);
+        $payload = $this->extractPayload->extract($credentials);
+
+        return $this->userRepository->find($payload->getId());
     }
 
     public function checkCredentials($credentials, UserInterface $user)

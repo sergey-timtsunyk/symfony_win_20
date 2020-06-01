@@ -20,7 +20,17 @@ services:
   App\Services\Security\TokenAuthenticator:
     arguments:
       - '@App\Repository\UserRepository'
+      - '@App\Services\JwtAuth\ExtractPayloadInterface'
 
   App\Services\Security\PasswordGenerator:
     arguments:
       - '%env(APP_SECRET)%'
+
+  App\Services\JwtAuth\JwtGenerator:
+    arguments:
+      - '%env(APP_SECRET)%'
+    public: false
+
+  App\Services\JwtAuth\JwtGeneratorInterface: '@App\Services\JwtAuth\JwtGenerator'
+
+  App\Services\JwtAuth\ExtractPayloadInterface: '@App\Services\JwtAuth\JwtGenerator'

@@ -25,4 +25,9 @@ class JwtPayload implements JwtPayloadInterface
             'role' => $this->role,
         ];
     }
+
+    public function getId(): int
+    {
+        return $this->userId;
+    }
 }
